@@ -52,4 +52,5 @@ def create_ascii():
     return response
 
 if __name__ == '__main__':
-   flask_app.run(port=5000, debug=True)
+   port = int(os.getenv('PORT', 5000))
+   flask_app.run(port=port, debug=True)
