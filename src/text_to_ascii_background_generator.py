@@ -33,6 +33,7 @@ def removeBlackBackground(image_file, out_file):
 
     img.putdata(newData)
     img.save(out_file, "PNG")
+    img.close()
 
 
 class DalleImageGenerator:
@@ -70,6 +71,7 @@ class TextToAsciiGenerator:
         # Saving the image in the given path
         no_bg_path = f"/tmp/dalle_im_no_bg_{noun}.png"
         dalle_im_no_bg.save(no_bg_path)
+        dalle_im.close()
         png_im_path = f"/tmp/dalle_im_no_bg_{noun}-ascii-art.png"
 
         self.ascii_library.ConvertAscii(no_bg_path.encode('UTF-8'), b'/tmp')
