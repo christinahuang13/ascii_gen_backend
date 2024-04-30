@@ -109,7 +109,9 @@ class TextToAsciiGenerator:
         no_bg_path = f"/tmp/dalle_im_no_bg_{noun}.png"
         tryRemoveImageBackground(dalle_im_path, no_bg_path, 50)
         png_im_path = f"/tmp/dalle_im_no_bg_{noun}-ascii-art.png"
+        print(f"Removed background for {dalle_im_path} ")
         self.ascii_library.ConvertAscii(no_bg_path.encode('UTF-8'), b'/tmp')
+        print(f"Converted ascii for {dalle_im_path} ")
         out_file = f"{out_folder}/out_{noun}.png"
         removeBlackBackground(png_im_path, out_file)
         return out_file
