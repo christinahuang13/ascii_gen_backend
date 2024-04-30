@@ -103,32 +103,13 @@ class TextToAsciiGenerator:
         self.ascii_library = ctypes.CDLL(f"src/libraries/ascii_image_converter_{self.architecture}.so")
 
     def synthesize_from_word(self, noun, out_folder):
-        dalle_im_path = f"src/images/dalle_im_{noun}.png"
+        dalle_im_path = f"/tmp/dalle_im_{noun}.png"
         print(f"============={noun}=============")
         self.image_generator.synthesize(self.text_prompt.format(noun), dalle_im_path)
-        # dalle_im = Image.open(dalle_im_path)
-        # dalle_im_no_bg = remove(dalle_im)
-        # Saving the image in the given path
-        no_bg_path = f"src/images/dalle_im_no_bg_{noun}.png"
+        no_bg_path = f"/tmp/dalle_im_no_bg_{noun}.png"
         tryRemoveImageBackground(dalle_im_path, no_bg_path, 50)
-        
-        # dalle_im.save(f"src/images/out_{noun}.png")
-        # dalle_im.close()
         png_im_path = f"/tmp/dalle_im_no_bg_{noun}-ascii-art.png"
-        # png_im_path = f"/tmp/dalle_im_{noun}-ascii-art.png"
         self.ascii_library.ConvertAscii(no_bg_path.encode('UTF-8'), b'/tmp')
-        # result = subprocess.run(
-        #     [
-        #         "ascii-image-converter",
-        #         no_bg_path,
-        #         "-W",
-        #         "150",
-        #         "--save-img",
-        #         "/tmp",
-        #     ],
-        #     stdout=subprocess.PIPE,
-        # )
-
         out_file = f"{out_folder}/out_{noun}.png"
         removeBlackBackground(png_im_path, out_file)
         return out_file
