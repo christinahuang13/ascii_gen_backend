@@ -100,7 +100,8 @@ class TextToAsciiGenerator:
         self.image_generator = DalleImageGenerator()
         self.text_prompt = "generate a simple line drawing of {}, background is a single, solid red color. Make the subjects of the image white."
         self.architecture = "x86_64" if platform.machine() in ("i386", "AMD64", "x86_64") else "arm64"
-        self.ascii_library = ctypes.CDLL(f"src/libraries/ascii_image_converter_{self.architecture}.so")
+        # self.ascii_library = ctypes.CDLL(f"src/libraries/ascii_image_converter_{self.architecture}.so")
+        self.ascii_library = ctypes.CDLL(f"src/libraries/ascii_image_converter.so")
 
     def synthesize_from_word(self, noun, out_folder):
         dalle_im_path = f"/tmp/dalle_im_{noun}.png"
