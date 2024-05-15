@@ -30,7 +30,6 @@ def async_synthesize_and_upload_image(*args):
     print(f"Successfully uploaded image for {noun} to {supabase_storage_path}!")
 
 def generate_ascii_images(request_id, text):
-    multiprocessing.set_start_method('spawn')
     most_freq, least_freq = extract_nouns(text)
     ascii_out_folder = f'/tmp/ascii_ims_{request_id}'
     Path(ascii_out_folder).mkdir(parents=True, exist_ok=True)
@@ -51,6 +50,7 @@ def create_ascii():
     # TODO: Validate data before adding to table
     table_result = supabase_client.table("ascii_submissions").insert(data).execute()
     response_id = table_result.data[0]['id']
+    multiprocessing.set_start_method('spawn')
     generate_ascii_images(response_id, data['text'])
     response = jsonify(table_result.data)
     return response
