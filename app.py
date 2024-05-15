@@ -7,7 +7,6 @@ from multiprocessing import Process
 import multiprocessing
 import os
 import logging
-import urllib
 
 supabase_client = create_supabase_clent()
 ascii_generator = TextToAsciiGenerator()
@@ -24,7 +23,7 @@ def async_synthesize_and_upload_image(*args):
     local_file = ascii_generator.synthesize_from_word(noun, out_folder)
 
     supabase_storage_path = f"/{request_id}/{os.path.basename(local_file)}"
-    uploaded_video_data = supabase_client.storage.from_('ascii-images').upload(supabase_storage_path, local_file, {
+    supabase_client.storage.from_('ascii-images').upload(supabase_storage_path, local_file, {
         "contentType": "image/png",
     })
     print(f"Successfully uploaded image for {noun} to {supabase_storage_path}!")
@@ -50,7 +49,13 @@ def create_ascii():
     # TODO: Validate data before adding to table
     table_result = supabase_client.table("ascii_submissions").insert(data).execute()
     response_id = table_result.data[0]['id']
-    multiprocessing.set_start_method('spawn')
+    current_method = multiprocessing.get_start_method(allow_none=True)
+    if current_method is None:
+        # If not set, set the start method to the desired method
+        multiprocessing.set_start_method("spawn")
+        print(f"Start method set to spawn")
+    else:
+        print(f"Start method already set to {current_method}")
     generate_ascii_images(response_id, data['text'])
     response = jsonify(table_result.data)
     return response
